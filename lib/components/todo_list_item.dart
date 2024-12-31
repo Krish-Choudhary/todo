@@ -9,6 +9,54 @@ class TodoListItem extends StatelessWidget {
 
   final int index;
 
+  String getMonth(int month) {
+    if (month == 1) {
+      return 'Jan';
+    } else if (month == 2) {
+      return 'Feb';
+    } else if (month == 3) {
+      return 'Mar';
+    } else if (month == 4) {
+      return 'Apr';
+    } else if (month == 5) {
+      return 'May';
+    } else if (month == 6) {
+      return 'Jun';
+    } else if (month == 7) {
+      return 'Jul';
+    } else if (month == 8) {
+      return 'Aug';
+    } else if (month == 9) {
+      return 'Sep';
+    } else if (month == 10) {
+      return 'Oct';
+    } else if (month == 11) {
+      return 'Nov';
+    } else {
+      return 'Dec';
+    }
+  }
+
+  String getFormattedDateandTime(DateTime date, TimeOfDay? time) {
+    String ans = '';
+    DateTime now = DateTime.now();
+    if (date.day == now.day &&
+        date.month == now.month &&
+        date.year == now.year) {
+      ans = 'Today';
+    } else if (date.day == now.day + 1 &&
+        date.month == now.month &&
+        date.year == now.year) {
+      ans = 'Tomorrow';
+    } else {
+      ans = '${date.day} ${getMonth(date.month)}';
+    }
+    if (time != null) {
+      ans = '$ans ${time.hour}:${time.minute}';
+    }
+    return ans;
+  }
+
   @override
   Widget build(BuildContext context) {
     final taskList = Provider.of<TaskListModel>(context);
@@ -50,7 +98,9 @@ class TodoListItem extends StatelessWidget {
         subtitle: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (task.date != null) Expanded(child: Text('${task.date!.day}')),
+            if (task.date != null)
+              Expanded(
+                  child: Text(getFormattedDateandTime(task.date!, task.time))),
             const Spacer(),
             categoryIndex != -1
                 ? Chip(
