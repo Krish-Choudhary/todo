@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo/components/post_item.dart';
 import 'package:todo/providers/post_provider.dart';
 
 class PostsScreen extends StatefulWidget {
@@ -28,6 +29,7 @@ class _PostsScreenState extends State<PostsScreen> {
 
   void _searchPosts() {
     final userId = int.tryParse(_searchController.text);
+    _searchController.clear();
     Provider.of<PostProvider>(context, listen: false).setFilterUserId(userId);
   }
 
@@ -74,23 +76,7 @@ class _PostsScreenState extends State<PostsScreen> {
                       itemCount: postProvider.posts.length,
                       itemBuilder: (context, index) {
                         final post = postProvider.posts[index];
-                        return Card(
-                          elevation: 2.0,
-                          margin: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(post.title,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold)),
-                                const SizedBox(height: 4.0),
-                                Text(post.body),
-                              ],
-                            ),
-                          ),
-                        );
+                        return PostItem(post: post);
                       },
                     ),
                   ),
