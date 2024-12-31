@@ -47,12 +47,14 @@ class MyHomePage extends StatelessWidget {
             title: const Text('Choose Category'),
             content: SizedBox(
               width: 300,
-              height: 250,
+              height: 300,
               child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 100,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 15,
+                  childAspectRatio:
+                      1, // Crucial for square items or consistent spacing
                 ),
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
@@ -61,22 +63,36 @@ class MyHomePage extends StatelessWidget {
                       selectedCategory = categories[index];
                       Navigator.of(context).pop();
                     },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: categoryColors[index],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child:
-                              Icon(categoryIcons[index], color: Colors.white),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(categories[index]),
-                      ],
+                    child: LayoutBuilder(
+                      // Use LayoutBuilder
+                      builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment
+                              .center, // Center content vertically
+                          children: [
+                            Container(
+                              width: constraints.maxWidth *
+                                  0.7, // Adjust container width
+                              height:
+                                  constraints.maxWidth * 0.7, // Make it square
+                              decoration: BoxDecoration(
+                                color: categoryColors[index],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Icon(categoryIcons[index],
+                                  color: Colors.white),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              categories[index],
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ), // Handle text overflow
+                          ],
+                        );
+                      },
                     ),
                   );
                 },
@@ -283,8 +299,8 @@ class MyHomePage extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const PostsScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const PostsScreen()));
               },
               icon: Icon(Icons.unfold_more_double_outlined))
         ],
